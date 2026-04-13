@@ -13,6 +13,7 @@
 #     "uvicorn>=0.42.0",
 #     "websockets>=16.0",
 #     "pyjson5>=2.0.0",
+#     "httpx[socks]",
 # ]
 # ///
 """
