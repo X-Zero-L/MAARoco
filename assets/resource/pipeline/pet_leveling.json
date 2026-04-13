@@ -1,0 +1,145 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "PetLeveling": {
+        "doc": "宠物练级入口",
+        "next": [
+            "Pet_NavigateToMap",
+            "[JumpBack]Handle_AdPopup",
+            "[JumpBack]Common_WaitLoading"
+        ],
+        "timeout": 15000,
+        "on_error": [
+            "Common_BackToMain"
+        ]
+    },
+    "Pet_NavigateToMap": {
+        "doc": "打开地图导航到练级区域",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "pet/map_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 500,
+        "next": [
+            "Pet_SelectArea"
+        ],
+        "timeout": 10000
+    },
+    "Pet_SelectArea": {
+        "doc": "选择练级区域",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "pet/leveling_area.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Pet_WaitAreaLoad"
+        ],
+        "timeout": 10000
+    },
+    "Pet_WaitAreaLoad": {
+        "doc": "等待区域加载",
+        "pre_wait_freezes": 2000,
+        "next": [
+            "Pet_FindEnemy"
+        ],
+        "timeout": 15000
+    },
+    "Pet_FindEnemy": {
+        "doc": "寻找并点击野怪",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "pet/wild_enemy.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "PetBattleLoop"
+        ],
+        "timeout": 10000
+    },
+    "PetBattleLoop": {
+        "doc": "战斗循环 - max_hit 由 interface.json 覆盖控制次数",
+        "next": [
+            "Battle_WaitStart"
+        ],
+        "timeout": 5000,
+        "on_error": [
+            "Common_BackToMain"
+        ]
+    },
+    "Battle_WaitStart": {
+        "doc": "等待战斗界面加载",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "battle/auto_fight.png"
+            }
+        },
+        "pre_wait_freezes": 1000,
+        "next": [
+            "Battle_ClickAuto"
+        ],
+        "timeout": 15000
+    },
+    "Battle_ClickAuto": {
+        "doc": "点击自动战斗",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "battle/auto_fight.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Battle_WaitResult"
+        ],
+        "timeout": 10000
+    },
+    "Battle_WaitResult": {
+        "doc": "等待战斗结束",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "battle/victory.png"
+            }
+        },
+        "timeout": 120000,
+        "next": [
+            "Battle_CloseResult"
+        ]
+    },
+    "Battle_CloseResult": {
+        "doc": "关闭战斗结算",
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    640,
+                    600,
+                    200,
+                    60
+                ]
+            }
+        },
+        "post_wait_freezes": 1000,
+        "next": [
+            "Pet_FindEnemy",
+            "[JumpBack]PetBattleLoop"
+        ],
+        "timeout": 10000
+    }
+}

@@ -1,0 +1,97 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "Common_CloseDialog": {
+        "doc": "关闭通用对话框（X 按钮）",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png",
+                "roi": [
+                    850,
+                    30,
+                    200,
+                    120
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 300
+    },
+    "Common_WaitLoading": {
+        "doc": "等待加载画面消失",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/loading.png"
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "pre_wait_freezes": 2000,
+        "timeout": 30000
+    },
+    "Common_BackToMain": {
+        "doc": "返回主界面 - 按返回键直到看到主界面标识",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "main/compass.png",
+                "roi": [
+                    0,
+                    500,
+                    200,
+                    220
+                ]
+            }
+        },
+        "inverse": true,
+        "action": {
+            "type": "ClickKey",
+            "param": {
+                "key": 4
+            }
+        },
+        "post_delay": 500,
+        "max_hit": 10,
+        "timeout": 15000
+    },
+    "Handle_NetworkError": {
+        "doc": "网络异常 - 点击重试",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "网络异常",
+                    "连接失败",
+                    "重新连接"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000
+    },
+    "Handle_AdPopup": {
+        "doc": "关闭广告/推荐弹窗",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/ad_close.png",
+                "roi": [
+                    900,
+                    30,
+                    150,
+                    100
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 300
+    }
+}

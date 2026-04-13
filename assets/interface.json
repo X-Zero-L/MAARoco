@@ -1,109 +1,101 @@
 {
-    // 本文件主要定义了通用 UI 的行为和显示内容
-    // 可参考文档和示例添加更多您需要的功能
-    // 文档：https://maafw.xyz/docs/3.3-ProjectInterfaceV2
-    // 示例：https://github.com/MaaXYZ/MaaFramework/blob/main/sample/interface.json
+    "$schema": "../deps/tools/interface.schema.json",
     "interface_version": 2,
-    "name": "MaaXXX",
-    "description": "这是一个使用 MaaFramework 创建的新项目。",
-    "contact": "QQ群: 123456789",
+    "name": "MAARoco",
+    "label": "MAA洛克王国",
+    "description": "洛克王国手游自动化助手，基于 MaaFramework 开发。",
+    "contact": "GitHub: https://github.com/X-Zero-L/MAARoco",
     "license": "MIT",
-    "welcome": "首次使用！欢迎使用 MAA!",
-    // 填写项目地址和版本号可实现自动更新功能
-    "github": "https://github.com/MaaXYZ/MaaPracticeBoilerplate",
-    "version": "1.0.0",
-    // Mirror酱为第三方分发服务，新项目默认关闭
-    // 若有需要请联系 Mirror酱 开通，直接自行开启是无法使用的
-    // "mirrorchyan_rid": "MaaXXX",
-    // "mirrorchyan_multiplatform": true,
+    "welcome": "欢迎使用 MAA洛克王国助手！\n\n首次使用请先连接设备，然后选择需要执行的任务。",
+    "version": "0.1.0",
     "controller": [
         {
             "name": "安卓端",
             "type": "Adb",
-            "display_short_side": 720 // 默认缩放分辨率的短边长度
-        },
-        {
-            "name": "桌面端",
-            "type": "Win32",
-            "win32": {
-                "class_regex": ".*",
-                "window_regex": "Visual Studio",
-                // 截图及控制方式，请根据项目实际情况修改
-                // 文档: https://maafw.xyz/docs/2.4-ControlMethods
-                "screencap": "PrintWindow", // 截图方式
-                "mouse": "PostMessageWithCursorPos", // 鼠标控制方式
-                "keyboard": "PostMessageWithCursorPos" // 键盘控制方式
-            }
+            "display_short_side": 720
         }
     ],
     "resource": [
         {
-            "name": "官服",
+            "name": "默认",
             "path": [
                 "./resource"
-            ]
-        },
-        {
-            "name": "B 服",
-            "path": [
-                "./resource"
-                // "./resource_bilibili"
             ]
         }
     ],
-    // 可选的 agent 示例
-    // "agent": {
-    //     "child_exec": "python",
-    //     "child_args": [
-    //         "./agent/main.py"
-    //     ]
-    // },
     "task": [
         {
-            "name": "普通任务",
-            "entry": "MyTask1"
+            "name": "启动游戏",
+            "entry": "StartApp",
+            "default_check": true,
+            "description": "启动洛克王国并等待进入主界面"
         },
         {
-            "name": "选项任务",
-            "entry": "MyTask2",
+            "name": "每日签到",
+            "entry": "DailySignIn",
+            "default_check": true,
+            "description": "完成每日签到领取奖励"
+        },
+        {
+            "name": "每日任务",
+            "entry": "DailyQuest",
+            "default_check": true,
+            "description": "自动完成每日任务"
+        },
+        {
+            "name": "宠物练级",
+            "entry": "PetLeveling",
+            "description": "自动战斗练级宠物",
             "option": [
-                "任务选项1"
+                "练级次数"
             ]
         },
         {
-            "name": "参数任务",
-            "entry": "MyTask3",
-            "option": [
-                "任务选项1"
-            ],
-            "pipeline_override": {}
+            "name": "领取邮件",
+            "entry": "CollectMail",
+            "description": "一键领取所有邮件奖励"
         },
         {
-            "name": "带Custom的任务",
-            "entry": "MyTask4"
+            "name": "关闭游戏",
+            "entry": "StopApp",
+            "description": "关闭洛克王国"
         }
     ],
     "option": {
-        "任务选项1": {
+        "练级次数": {
             "type": "select",
+            "label": "练级次数",
             "cases": [
                 {
-                    "name": "文本1",
+                    "name": "10次",
                     "pipeline_override": {
-                        "OcrTask": {
-                            "text": "文本1"
+                        "PetBattleLoop": {
+                            "max_hit": 10
                         }
                     }
                 },
                 {
-                    "name": "文本2",
+                    "name": "20次",
                     "pipeline_override": {
-                        "OcrTask": {
-                            "text": "文本2"
+                        "PetBattleLoop": {
+                            "max_hit": 20
                         }
                     }
+                },
+                {
+                    "name": "50次",
+                    "pipeline_override": {
+                        "PetBattleLoop": {
+                            "max_hit": 50
+                        }
+                    }
+                },
+                {
+                    "name": "无限",
+                    "pipeline_override": {}
                 }
-            ]
+            ],
+            "default_case": "20次"
         }
     }
 }

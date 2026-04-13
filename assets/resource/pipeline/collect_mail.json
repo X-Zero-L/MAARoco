@@ -1,0 +1,90 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "CollectMail": {
+        "doc": "领取邮件入口",
+        "next": [
+            "Mail_OpenInbox",
+            "[JumpBack]Handle_AdPopup",
+            "[JumpBack]Common_WaitLoading"
+        ],
+        "timeout": 15000
+    },
+    "Mail_OpenInbox": {
+        "doc": "打开邮箱",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "mail/inbox_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 500,
+        "next": [
+            "Mail_ClaimAll",
+            "Mail_Empty"
+        ],
+        "timeout": 10000
+    },
+    "Mail_ClaimAll": {
+        "doc": "一键领取所有邮件",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "mail/claim_all.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Mail_CloseReward"
+        ],
+        "timeout": 5000
+    },
+    "Mail_Empty": {
+        "doc": "邮箱为空，跳过",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "暂无邮件"
+                ]
+            }
+        },
+        "next": [
+            "Mail_Close"
+        ]
+    },
+    "Mail_CloseReward": {
+        "doc": "关闭领取弹窗",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 300,
+        "next": [
+            "Mail_Close"
+        ],
+        "timeout": 5000
+    },
+    "Mail_Close": {
+        "doc": "关闭邮箱",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 300
+    }
+}

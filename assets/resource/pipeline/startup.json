@@ -1,0 +1,42 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "StartApp": {
+        "doc": "启动游戏",
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.tencent.lrkgame"
+            }
+        },
+        "next": [
+            "WaitMainScreen"
+        ],
+        "timeout": 60000
+    },
+    "StopApp": {
+        "doc": "关闭游戏",
+        "action": {
+            "type": "StopApp",
+            "param": {
+                "package": "com.tencent.lrkgame"
+            }
+        }
+    },
+    "WaitMainScreen": {
+        "doc": "等待主界面加载完成",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "main/compass.png",
+                "roi": [
+                    0,
+                    500,
+                    200,
+                    220
+                ]
+            }
+        },
+        "pre_wait_freezes": 2000,
+        "timeout": 30000
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "DailySignIn": {
+        "doc": "每日签到入口",
+        "next": [
+            "SignIn_OpenPanel",
+            "SignIn_AlreadyDone",
+            "[JumpBack]Handle_AdPopup",
+            "[JumpBack]Common_WaitLoading"
+        ],
+        "timeout": 15000
+    },
+    "SignIn_OpenPanel": {
+        "doc": "打开签到面板",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "daily/sign_in_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 500,
+        "next": [
+            "SignIn_Claim"
+        ],
+        "timeout": 10000
+    },
+    "SignIn_AlreadyDone": {
+        "doc": "已签到，跳过",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "daily/sign_in_done.png"
+            }
+        }
+    },
+    "SignIn_Claim": {
+        "doc": "点击领取签到奖励",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "daily/sign_in_claim.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "SignIn_CloseReward"
+        ],
+        "timeout": 10000
+    },
+    "SignIn_CloseReward": {
+        "doc": "关闭奖励弹窗",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 300
+    }
+}

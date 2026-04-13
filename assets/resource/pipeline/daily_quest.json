@@ -1,0 +1,91 @@
+{
+    "$schema": "../../../deps/tools/pipeline.schema.json",
+    "DailyQuest": {
+        "doc": "每日任务入口",
+        "next": [
+            "Quest_OpenPanel",
+            "[JumpBack]Handle_AdPopup",
+            "[JumpBack]Common_WaitLoading"
+        ],
+        "timeout": 15000
+    },
+    "Quest_OpenPanel": {
+        "doc": "打开任务面板",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "daily/quest_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 500,
+        "next": [
+            "Quest_ClaimAll",
+            "Quest_NoAvailable"
+        ],
+        "timeout": 10000
+    },
+    "Quest_ClaimAll": {
+        "doc": "一键领取所有任务奖励",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "daily/quest_claim_all.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Quest_CloseReward"
+        ],
+        "timeout": 5000
+    },
+    "Quest_NoAvailable": {
+        "doc": "没有可领取的任务",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "已完成"
+                ]
+            }
+        },
+        "next": [
+            "Quest_Close"
+        ]
+    },
+    "Quest_CloseReward": {
+        "doc": "关闭奖励弹窗",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_wait_freezes": 300,
+        "next": [
+            "Quest_ClaimAll",
+            "Quest_Close"
+        ],
+        "timeout": 5000
+    },
+    "Quest_Close": {
+        "doc": "关闭任务面板",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/close_btn.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 300
+    }
+}
