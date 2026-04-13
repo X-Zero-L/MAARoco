@@ -1,11 +1,11 @@
 {
     "$schema": "../../../deps/tools/pipeline.schema.json",
-    "Flower": {
-        "doc": "入口：优先大笑，没有则鞠躬，每8.5秒循环，待机自动点掉",
-        "next": ["Flower_Laugh", "Flower_Bow", "[JumpBack]Flower_HandleIdle"],
+    "FlowerLaugh": {
+        "doc": "入口：循环点击大笑，8秒间隔，待机自动点掉",
+        "next": ["FlowerLaugh_Click", "[JumpBack]Flower_HandleIdle"],
         "timeout": -1
     },
-    "Flower_Laugh": {
+    "FlowerLaugh_Click": {
         "doc": "点击大笑按钮",
         "recognition": {
             "type": "TemplateMatch",
@@ -17,11 +17,17 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 8500,
-        "next": ["Flower_Laugh", "Flower_Bow", "[JumpBack]Flower_HandleIdle"],
+        "post_delay": 8000,
+        "next": ["FlowerLaugh_Click", "[JumpBack]Flower_HandleIdle"],
         "timeout": -1
     },
-    "Flower_Bow": {
+
+    "FlowerBow": {
+        "doc": "入口：循环点击鞠躬，15秒间隔，待机自动点掉",
+        "next": ["FlowerBow_Click", "[JumpBack]Flower_HandleIdle"],
+        "timeout": -1
+    },
+    "FlowerBow_Click": {
         "doc": "点击鞠躬按钮",
         "recognition": {
             "type": "TemplateMatch",
@@ -33,10 +39,11 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 8500,
-        "next": ["Flower_Laugh", "Flower_Bow", "[JumpBack]Flower_HandleIdle"],
+        "post_delay": 15000,
+        "next": ["FlowerBow_Click", "[JumpBack]Flower_HandleIdle"],
         "timeout": -1
     },
+
     "Flower_HandleIdle": {
         "doc": "检测到待机画面，点击消除",
         "recognition": {
