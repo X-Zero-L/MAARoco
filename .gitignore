@@ -444,6 +444,7 @@ deps/*
 !deps/tools/
 deps/tools/*
 !deps/tools/*.schema.json
+deps/.maafw-version
 build
 install
 
@@ -463,6 +464,9 @@ maa.log
 
 # Cropper temp screenshots
 screenshots/
+
+# Template source screenshots (original 720p, for re-editing)
+assets/resource/image/.source/
 
 # OS files
 .DS_Store
