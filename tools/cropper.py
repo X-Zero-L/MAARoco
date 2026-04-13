@@ -140,9 +140,9 @@ def load_pipeline_rois(resource_dir: str) -> list[tuple[str, list[int]]]:
 
     for fpath in glob.glob(os.path.join(pipeline_dir, "*.json")):
         try:
-            with open(fpath) as f:
+            with open(fpath, "r", encoding="utf-8-sig") as f:
                 data = json.load(f)
-        except (json.JSONDecodeError, OSError):
+        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
             continue
 
         for node_name, node in data.items():

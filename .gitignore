@@ -455,7 +455,8 @@ debug
 
 # oh-my-claudecode
 .omc/
-
+# specstory
+.specstory/
 # MaaFW logs & runtime
 maa.log
 *.log
