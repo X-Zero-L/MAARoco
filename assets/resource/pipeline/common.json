@@ -106,5 +106,33 @@
         "action": {
             "type": "Click"
         }
+    },
+    "Login_EnterWorld": {
+        "doc": "已登录，点击进入世界",
+        "enabled": false,
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "login/enter_world.png",
+                "roi": [561, 518, 160, 38]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "Handle_LoadingSpinner": {
+        "doc": "加载中转圈，等待消失",
+        "enabled": false,
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/loading_spinner.png",
+                "roi": [675, 246, 39, 62]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        }
     }
 }
