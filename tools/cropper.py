@@ -109,6 +109,13 @@ class TemplateEntry:
 
 
 @dataclass
+class UndoEntry:
+    """Snapshot of ROI + templates for undo/redo."""
+    roi_rect: tuple[int, int, int, int] | None
+    templates: list[TemplateEntry]
+
+
+@dataclass
 class AppState:
     base_img: np.ndarray | None = None
     roi_rect: tuple[int, int, int, int] | None = None
@@ -123,6 +130,22 @@ class AppState:
     zoom_factor: float = 1.0
     pan_offset: QPointF = field(default_factory=lambda: QPointF(0, 0))
     selected_template_idx: int = -1
+    undo_stack: list[UndoEntry] = field(default_factory=list)
+    redo_stack: list[UndoEntry] = field(default_factory=list)
+
+    def snapshot(self) -> UndoEntry:
+        return UndoEntry(
+            roi_rect=self.roi_rect,
+            templates=[TemplateEntry(rect=t.rect, name=t.name) for t in self.templates],
+        )
+
+    def push_undo(self):
+        """Save current state to undo stack before a change."""
+        self.undo_stack.append(self.snapshot())
+        self.redo_stack.clear()
+        # Limit stack size
+        if len(self.undo_stack) > 50:
+            self.undo_stack.pop(0)
 
 
 # ---------------------------------------------------------------------------
@@ -632,6 +655,7 @@ class CanvasWidget(QWidget):
             self._drag_start_img = (ix, iy)
             self._drag_current_img = (ix, iy)
         elif event.button() == Qt.MouseButton.RightButton and self.state.mode == MODE_ROI:
+            self.state.push_undo()
             self.state.roi_rect = None
             self.roi_changed.emit()
             self.status_message.emit("ROI 已清除")
@@ -688,6 +712,7 @@ class CanvasWidget(QWidget):
             self.update()
             return
         rect = normalize_rect((sx, sy, ex, ey))
+        self.state.push_undo()
         if self.state.mode == MODE_ROI:
             self.state.roi_rect = rect
             self.roi_changed.emit()
@@ -844,6 +869,7 @@ class SidebarWidget(QFrame):
         # Shortcut reference
         lo.addSpacing(4)
         shortcuts_text = (
+            "Ctrl+Z 撤销   Ctrl+Shift+Z 重做\n"
             "G 涂色   C 复制坐标   R 重置   Del 删除模板\n"
             "+/- 笔刷   P Pipeline叠加   Ctrl+0 适应窗口\n"
             "滚轮缩放   中键平移   ←/→ 切换截图"
@@ -1186,6 +1212,9 @@ class CropperWindow(QMainWindow):
         sc(Qt.Key.Key_Right, lambda: self._nav_screenshot(1))
         sc(Qt.Key.Key_R, self._reset_all)
         sc(Qt.Key.Key_Delete, self._delete_selected_template)
+        sc("Ctrl+Z", self._undo)
+        sc("Ctrl+Shift+Z", self._redo)
+        sc("Ctrl+Y", self._redo)
         sc("Ctrl+O", self._open_image_dialog)
         sc("Ctrl+0", self.canvas.fit_to_window)
         sc(Qt.Key.Key_Q, self.close)
@@ -1308,6 +1337,7 @@ class CropperWindow(QMainWindow):
 
     def _delete_template(self, idx: int):
         if 0 <= idx < len(self.state.templates):
+            self.state.push_undo()
             self.state.templates.pop(idx)
             self.state.selected_template_idx = min(
                 self.state.selected_template_idx, len(self.state.templates) - 1
@@ -1321,6 +1351,7 @@ class CropperWindow(QMainWindow):
             self._delete_template(self.state.selected_template_idx)
 
     def _clear_templates(self):
+        self.state.push_undo()
         self.state.templates.clear()
         self.state.selected_template_idx = -1
         self.sidebar.refresh_templates()
@@ -1353,9 +1384,46 @@ class CropperWindow(QMainWindow):
         QApplication.clipboard().setText(text)
         self._info(f"已复制: {text}")
 
+    # ── undo / redo ──
+
+    def _undo(self):
+        if not self.state.undo_stack:
+            self._warn("无可撤销操作")
+            return
+        self.state.redo_stack.append(self.state.snapshot())
+        entry = self.state.undo_stack.pop()
+        self.state.roi_rect = entry.roi_rect
+        self.state.templates = entry.templates
+        self.state.selected_template_idx = min(
+            self.state.selected_template_idx, len(self.state.templates) - 1
+        )
+        self.sidebar.refresh_templates()
+        self.sidebar.update_roi_label()
+        self.canvas.update()
+        self._update_status()
+        self._info("已撤销")
+
+    def _redo(self):
+        if not self.state.redo_stack:
+            self._warn("无可重做操作")
+            return
+        self.state.undo_stack.append(self.state.snapshot())
+        entry = self.state.redo_stack.pop()
+        self.state.roi_rect = entry.roi_rect
+        self.state.templates = entry.templates
+        self.state.selected_template_idx = min(
+            self.state.selected_template_idx, len(self.state.templates) - 1
+        )
+        self.sidebar.refresh_templates()
+        self.sidebar.update_roi_label()
+        self.canvas.update()
+        self._update_status()
+        self._info("已重做")
+
     # ── reset ──
 
     def _reset_all(self):
+        self.state.push_undo()
         self.state.roi_rect = None
         self.state.templates.clear()
         self.state.selected_template_idx = -1
