@@ -136,14 +136,17 @@ jobs:
           7z x ${{ fromJson(steps.download_mwu.outputs.downloaded_files)[0] }} -obuild -y
 
       - name: Compress Final Artifact
+        shell: bash
         run: |
-          7z a -t7z -mx=9 -mmt -ms -r ${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.7z "./build/*"
+          cd build
+          zip -r ../${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.zip .
+          cd ..
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}
-          path: ${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.7z
+          path: ${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.zip
 
   changelog:
     name: Generate changelog
@@ -178,7 +181,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: release/**/*.7z
+          files: release/**/*.zip
           tag_name: ${{ needs.meta.outputs.tag }}
           body: ${{ needs.changelog.outputs.release_body }}
           draft: false
