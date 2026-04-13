@@ -15,35 +15,37 @@
 
 ## 功能
 
-- **循环产花** — 自动点击表情（鞠躬/大笑），每 8.5 秒执行一次，支持待机自动唤醒
+- **产花·表情动作** — 自动点击表情（优先大笑，无则鞠躬），每 8.5 秒执行一次
+- **产花·播放留影** — 循环点击观赏/播放留影按钮
+- 待机画面自动唤醒
 
 ## 快速开始
 
-### 1. 环境准备
+### 方式一：使用 MWU Web GUI（推荐）
 
-- ADB 工具（如 [scrcpy](https://github.com/Genymobile/scrcpy) 自带）
-- [uv](https://docs.astral.sh/uv/)（可选，用于运行开发工具）
+从 [Releases](../../releases) 下载对应平台的压缩包，解压后运行即可。内含 [MWU](https://github.com/ravizhan/MWU) Web GUI，打开浏览器访问即可操作。
 
-### 2. 下载 MaaFramework 运行时
+> 服务器部署时建议配合 nginx 反向代理 + 身份认证，避免暴露在公网。
+
+### 方式二：使用 MaaPiCli 命令行
+
+#### 1. 下载 MaaFramework 运行时
 
 ```bash
 uv run tools/setup.py
 ```
 
-自动下载对应平台的 MaaFramework 到 `deps/` 目录。
-
-### 3. 运行
+#### 2. 运行
 
 ```bash
-# Windows
 ./run.sh
 # 或手动
 cp assets/interface.json deps/bin/ && ./deps/bin/MaaPiCli.exe
 ```
 
-首次运行选择 ADB 设备连接，之后选择「循环产花」任务执行。
+首次运行选择 ADB 设备连接，之后选择需要执行的任务。
 
-**使用前请先在游戏内手动进入表情面板**，脚本会在该界面循环点击表情按钮。
+**表情动作任务需先在游戏内手动进入表情面板**，留影任务需保证留影按钮可见。
 
 ## 开发工具
 
@@ -67,16 +69,19 @@ assets/
 ├── interface.json          # MaaFW 任务接口定义
 └── resource/
     ├── image/              # 模板图片
-    │   ├── common/         # 通用（待机画面等）
-    │   └── flower/         # 产花相关
+    │   ├── common/         # 通用（待机、加载等）
+    │   ├── flower/         # 产花相关（laugh/bow/replay）
+    │   └── login/          # 登录相关
     └── pipeline/           # Pipeline JSON
-        ├── common.json     # 通用节点
-        └── flower.json     # 产花流程
+        ├── common.json     # 通用节点（待机、弹窗等）
+        ├── flower.json     # 产花流程
+        └── collect_mail.json
 tools/
 ├── setup.py                # 一键下载 MaaFramework
-└── cropper.py              # 截图裁剪工具
+└── cropper.py              # 截图裁剪工具（PySide6 GUI）
 ```
 
 ## 鸣谢
 
-本项目由 **[MaaFramework](https://github.com/MaaXYZ/MaaFramework)** 强力驱动！
+- **[MaaFramework](https://github.com/MaaXYZ/MaaFramework)** — 自动化框架
+- **[MWU](https://github.com/ravizhan/MWU)** — Web GUI
