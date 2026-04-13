@@ -138,9 +138,11 @@ jobs:
       - name: Compress Final Artifact
         shell: bash
         run: |
-          cd build
-          zip -r ../${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.zip .
-          cd ..
+          if command -v zip &>/dev/null; then
+            cd build && zip -r ../${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.zip . && cd ..
+          else
+            7z a -tzip ${{ env.repo_name }}-${{ matrix.platform }}-${{ matrix.arch }}-${{ env.tag }}.zip ./build/*
+          fi
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
