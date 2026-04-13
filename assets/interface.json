@@ -27,19 +27,16 @@
         {
             "name": "启动游戏",
             "entry": "StartApp",
-            "default_check": true,
             "description": "启动洛克王国并等待进入主界面"
         },
         {
             "name": "每日签到",
             "entry": "DailySignIn",
-            "default_check": true,
             "description": "完成每日签到领取奖励"
         },
         {
             "name": "每日任务",
             "entry": "DailyQuest",
-            "default_check": true,
             "description": "自动完成每日任务"
         },
         {
@@ -54,6 +51,12 @@
             "name": "领取邮件",
             "entry": "CollectMail",
             "description": "一键领取所有邮件奖励"
+        },
+        {
+            "name": "循环产花",
+            "entry": "Flower",
+            "default_check": true,
+            "description": "每8.5秒自动点击表情（优先大笑，无则鞠躬），请先打开对应动作界面"
         },
         {
             "name": "关闭游戏",

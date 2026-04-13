@@ -93,5 +93,18 @@
             "type": "Click"
         },
         "post_delay": 300
+    },
+    "HandleIdle": {
+        "doc": "待机画面，点击消除",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "common/idle_screen.png",
+                "roi": [584, 340, 58, 63]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
     }
 }
