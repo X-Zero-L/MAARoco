@@ -52,10 +52,15 @@
             "description": "一键领取所有邮件奖励"
         },
         {
-            "name": "循环产花",
+            "name": "产花·表情动作",
             "entry": "Flower",
+            "description": "循环点击表情（优先大笑，无则鞠躬），请先打开表情面板"
+        },
+        {
+            "name": "产花·播放留影",
+            "entry": "FlowerReplay",
             "default_check": true,
-            "description": "每8.5秒自动点击表情（优先大笑，无则鞠躬），请先打开对应动作界面"
+            "description": "循环点击观赏/播放留影按钮，请先保证留影按钮出现"
         },
         {
             "name": "关闭游戏",

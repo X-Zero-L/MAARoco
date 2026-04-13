@@ -50,5 +50,27 @@
             "type": "Click"
         },
         "post_delay": 500
+    },
+
+    "FlowerReplay": {
+        "doc": "入口：循环点击播放留影（观赏按钮），待机自动点掉",
+        "next": ["FlowerReplay_Play", "[JumpBack]Flower_HandleIdle"],
+        "timeout": -1
+    },
+    "FlowerReplay_Play": {
+        "doc": "点击观赏/播放留影按钮",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "flower/replay",
+                "roi": [704, 316, 263, 73]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 8500,
+        "next": ["FlowerReplay_Play", "[JumpBack]Flower_HandleIdle"],
+        "timeout": -1
     }
 }
