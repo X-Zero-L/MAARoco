@@ -82,10 +82,6 @@ jobs:
             platform: linux
             arch: aarch64
 
-          - os: macos-13
-            platform: macos
-            arch: x86_64
-
           - os: macos-latest
             platform: macos
             arch: aarch64
