@@ -452,3 +452,20 @@ tools/ImageCropper/**/*.png
 
 config
 debug
+
+# oh-my-claudecode
+.omc/
+
+# MaaFW logs & runtime
+maa.log
+*.log
+
+# Cropper temp screenshots
+screenshots/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# pnpm
+pnpm-lock.yaml
