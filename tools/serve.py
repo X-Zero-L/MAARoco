@@ -140,6 +140,10 @@ def setup_resources():
         json.dump(data, f, ensure_ascii=False, indent=4)
     print("  Updated interface.json with agent config")
 
+    # MWU 需要 version 文件
+    version_file = MWU_DIR / "version"
+    version_file.write_text(data.get("version", "0.1.0"))
+
     # MaaAgentBinary
     mab_dest = MWU_DIR / "MaaAgentBinary"
     if not (mab_dest.exists() or mab_dest.is_symlink()):
